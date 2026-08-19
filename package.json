@@ -1,0 +1,13 @@
+{
+  "name": "fitness-platform",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Fitness Management and Analytics Platform - workspace scripts",
+  "scripts": {
+    "install:all": "npm --prefix server install && npm --prefix client install",
+    "dev:server": "npm --prefix server run dev",
+    "dev:client": "npm --prefix client run dev",
+    "start:server": "npm --prefix server start",
+    "build:client": "npm --prefix client run build"
+  }
+}

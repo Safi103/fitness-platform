@@ -1,0 +1,1093 @@
+/* ==========================================================================
+   Fitness Platform - design tokens and base styles
+
+   Direction: "competition plates". Cold steel surfaces, gunmetal ink, and
+   the standard plate colors as a FUNCTIONAL palette - red (25 kg) drives
+   primary actions, blue (20) is for links and focus, yellow (15) marks
+   records, green (10) marks success. Type: Barlow Condensed for display,
+   Barlow for text, IBM Plex Mono for logged numbers.
+   ========================================================================== */
+
+:root {
+  --steel: #eef0f2;
+  --surface: #ffffff;
+  --ink: #1d2126;
+  --ink-soft: #5a6470;
+  --line: #d4d9de;
+
+  --plate-red: #d5382e;
+  --plate-red-dark: #b02a22;
+  --plate-blue: #2456a6;
+  --plate-yellow: #f0b429;
+  --plate-green: #1f8a4c;
+
+  --font-display: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --font-body: 'Barlow', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+
+  --radius: 6px;
+  --shadow: 0 1px 2px rgba(29, 33, 38, 0.06), 0 8px 24px rgba(29, 33, 38, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--steel);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+  margin: 0;
+}
+
+p {
+  margin: 0 0 12px;
+}
+
+a {
+  color: var(--plate-blue);
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+/* --- brand: a stack of plate ends, heaviest first ------------------------ */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.plate-mark {
+  display: inline-flex;
+  align-items: center;
+}
+
+.plate-mark span {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 3px solid var(--surface);
+  margin-left: -7px;
+}
+
+.plate-mark span:first-child {
+  margin-left: 0;
+}
+
+.plate-25 { background: var(--plate-red); }
+.plate-20 { background: var(--plate-blue); }
+.plate-15 { background: var(--plate-yellow); }
+.plate-10 { background: var(--plate-green); }
+
+.wordmark {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* --- buttons -------------------------------------------------------------- */
+.btn {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border: none;
+  border-radius: var(--radius);
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 120ms ease;
+}
+
+.btn-primary {
+  background: var(--plate-red);
+  color: #ffffff;
+  width: 100%;
+}
+
+.btn-primary:hover {
+  background: var(--plate-red-dark);
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #ffffff;
+  font-size: 15px;
+  padding: 6px 14px;
+}
+
+.btn-ghost:hover {
+  border-color: #ffffff;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.btn:focus-visible,
+a:focus-visible {
+  outline: 3px solid var(--plate-blue);
+  outline-offset: 2px;
+}
+
+/* --- forms ---------------------------------------------------------------- */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.field label {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.field input {
+  font: inherit;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.field input:focus {
+  border-color: var(--plate-blue);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(36, 86, 166, 0.18);
+}
+
+.field .hint {
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+.form-error {
+  background: #fdecea;
+  color: #8f1d16;
+  border: 1px solid #f3b6b0;
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+/* --- auth pages ------------------------------------------------------------ */
+.auth-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 400px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  border-top: 6px solid var(--plate-red);
+  box-shadow: var(--shadow);
+  padding: 32px;
+}
+
+.auth-card .brand {
+  margin-bottom: 20px;
+}
+
+.auth-card h1 {
+  font-size: 32px;
+  margin-bottom: 4px;
+}
+
+.auth-sub {
+  color: var(--ink-soft);
+  margin-bottom: 24px;
+}
+
+.auth-switch {
+  margin: 20px 0 0;
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+/* --- app shell -------------------------------------------------------------- */
+.topbar {
+  background: var(--ink);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 0 24px;
+  height: 56px;
+}
+
+.topbar .wordmark {
+  color: #ffffff;
+  font-size: 18px;
+}
+
+.topbar .plate-mark span {
+  border-color: var(--ink);
+}
+
+.topbar nav {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+}
+
+.topbar nav a {
+  color: #c9cfd6;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 15px;
+  padding: 6px 10px;
+  border-radius: var(--radius);
+}
+
+.topbar nav a:hover {
+  color: #ffffff;
+}
+
+.topbar nav a.active {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.topbar .user {
+  font-size: 14px;
+  color: #c9cfd6;
+}
+
+.page {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+.page h1 {
+  font-size: 34px;
+  margin-bottom: 8px;
+}
+
+.lead {
+  color: var(--ink-soft);
+  max-width: 60ch;
+}
+
+.page-loading {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  color: var(--ink-soft);
+}
+
+@media (max-width: 560px) {
+  .topbar {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 10px 16px;
+    row-gap: 8px;
+  }
+
+  .page {
+    padding: 24px 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* ==========================================================================
+   Catalog module: toolbar, cards, list rows, tags
+   Category tags use the plate palette functionally: strength = red (25),
+   hypertrophy = blue (20), cardio = green (10). The yellow plate (15) is
+   reserved for the Custom badge.
+   ========================================================================== */
+
+.page-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.toolbar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.toolbar input[type='search'] {
+  flex: 1;
+  min-width: 200px;
+  font: inherit;
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+select,
+textarea {
+  font: inherit;
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+textarea {
+  width: 100%;
+  resize: vertical;
+}
+
+select:focus,
+textarea:focus,
+.toolbar input[type='search']:focus {
+  border-color: var(--plate-blue);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(36, 86, 166, 0.18);
+}
+
+.card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.card h2 {
+  font-size: 22px;
+  margin-bottom: 12px;
+}
+
+.list-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  margin-bottom: 8px;
+}
+
+.list-row .name {
+  font-weight: 600;
+}
+
+.row-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.tag {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 2px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+}
+
+.tag-strength {
+  background: var(--plate-red);
+  border-color: var(--plate-red);
+  color: #ffffff;
+}
+
+.tag-hypertrophy {
+  background: var(--plate-blue);
+  border-color: var(--plate-blue);
+  color: #ffffff;
+}
+
+.tag-cardio {
+  background: var(--plate-green);
+  border-color: var(--plate-green);
+  color: #ffffff;
+}
+
+.tag-custom {
+  background: var(--plate-yellow);
+  border-color: var(--plate-yellow);
+  color: var(--ink);
+}
+
+.link-danger {
+  background: none;
+  border: none;
+  color: var(--plate-red);
+  cursor: pointer;
+  font: inherit;
+  font-size: 14px;
+  padding: 4px;
+}
+
+.link-danger:hover {
+  text-decoration: underline;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 48px 16px;
+  color: var(--ink-soft);
+  background: var(--surface);
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+}
+
+.inline-form .form-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr auto;
+  gap: 10px;
+  align-items: end;
+}
+
+.inline-form .form-grid .field {
+  margin-bottom: 0;
+}
+
+a.btn {
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.page-head .btn-primary,
+.empty-state .btn-primary,
+.inline-form .btn-primary {
+  width: auto;
+}
+
+@media (max-width: 720px) {
+  .inline-form .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================================
+   Routines module: routine cards, weekday chips, the builder grid
+   ========================================================================== */
+
+.card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.card-actions {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.routine-meta {
+  color: var(--ink-soft);
+  font-size: 14px;
+  margin: 0 0 4px;
+}
+
+.day-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.day-chip {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 4px 11px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.day-chip:hover {
+  border-color: var(--plate-blue);
+}
+
+.day-chip.active {
+  background: var(--plate-blue);
+  border-color: var(--plate-blue);
+  color: #ffffff;
+}
+
+.day-chip:focus-visible {
+  outline: 3px solid var(--plate-blue);
+  outline-offset: 2px;
+}
+
+.picker-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.picker-row select {
+  flex: 1;
+}
+
+.picker-row .btn-primary {
+  width: auto;
+}
+
+.builder-row {
+  display: grid;
+  grid-template-columns: minmax(150px, 2fr) 64px 76px 76px 84px minmax(190px, auto);
+  gap: 10px;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.builder-head {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  border-bottom: 2px solid var(--line);
+}
+
+.builder-row .name {
+  font-weight: 600;
+}
+
+.builder-row input {
+  width: 100%;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.builder-row input:focus {
+  border-color: var(--plate-blue);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(36, 86, 166, 0.18);
+}
+
+.row-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.icon-btn {
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  padding: 4px 9px;
+  color: var(--ink-soft);
+}
+
+.icon-btn:hover:not(:disabled) {
+  border-color: var(--plate-blue);
+  color: var(--ink);
+}
+
+.icon-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.builder-actions {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.builder-actions .btn-primary {
+  width: auto;
+}
+
+@media (max-width: 720px) {
+  .builder-head {
+    display: none;
+  }
+
+  .builder-row {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .builder-row .name,
+  .builder-row .row-actions {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ==========================================================================
+   Live workout module: start rows, exercise blocks, set grid, PR banners
+   ========================================================================== */
+
+.tag-today {
+  background: var(--plate-blue);
+  border-color: var(--plate-blue);
+  color: #ffffff;
+}
+
+.start-btn {
+  width: auto;
+}
+
+.live-actions {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.live-actions .btn-primary {
+  width: auto;
+}
+
+.exercise-block h2 {
+  margin-bottom: 4px;
+}
+
+.note-area {
+  margin: 8px 0 4px;
+}
+
+.set-row {
+  display: grid;
+  grid-template-columns: 36px 1fr 1fr 1fr 80px;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.set-head {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  border-bottom: 2px solid var(--line);
+}
+
+.set-num {
+  color: var(--ink-soft);
+}
+
+.set-row input {
+  width: 100%;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.set-row input:focus {
+  border-color: var(--plate-blue);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(36, 86, 166, 0.18);
+}
+
+.add-set {
+  margin-top: 10px;
+}
+
+.finish-card h1 {
+  margin-bottom: 8px;
+}
+
+.pr-list {
+  margin: 16px 0;
+}
+
+.pr-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #fdf3d7;
+  border: 1px solid var(--plate-yellow);
+  border-left: 6px solid var(--plate-yellow);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  margin-bottom: 8px;
+}
+
+.pr-flag {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.pr-prev {
+  color: var(--ink-soft);
+}
+
+@media (max-width: 560px) {
+  .set-row {
+    grid-template-columns: 28px 1fr 1fr 1fr 70px;
+    gap: 6px;
+  }
+}
+
+/* ==========================================================================
+   Rest timer: sticky countdown bar + per-set Done state
+   ========================================================================== */
+
+.timer-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.timer-switch input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--plate-blue);
+}
+
+.set-row {
+  grid-template-columns: 36px 1fr 1fr 1fr auto 80px;
+}
+
+.set-done input {
+  background: #ecf6ef;
+  border-color: var(--plate-green);
+}
+
+.done-btn {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink-soft);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.done-btn:hover {
+  border-color: var(--plate-green);
+  color: var(--ink);
+}
+
+.done-btn.active {
+  background: var(--plate-green);
+  border-color: var(--plate-green);
+  color: #ffffff;
+}
+
+.rest-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--ink);
+  color: #ffffff;
+  overflow: hidden;
+}
+
+.rest-track {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  background: rgba(36, 86, 166, 0.55);
+  transition: width 1s linear;
+}
+
+.rest-over .rest-track {
+  background: rgba(31, 138, 76, 0.65);
+  width: 100% !important;
+}
+
+.rest-content {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 12px 24px;
+}
+
+.rest-label {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 17px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  flex: 1;
+}
+
+.rest-clock {
+  font-size: 26px;
+}
+
+@media (max-width: 560px) {
+  .set-row {
+    grid-template-columns: 24px 1fr 1fr 1fr auto 60px;
+    gap: 6px;
+  }
+}
+
+/* ==========================================================================
+   History module: feed rows, workout detail, sets table, notes
+   ========================================================================== */
+
+.history-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  margin-bottom: 8px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.history-row:hover {
+  border-color: var(--plate-blue);
+}
+
+.history-stats {
+  display: flex;
+  gap: 18px;
+  color: var(--ink-soft);
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.load-more {
+  text-align: center;
+  margin-top: 12px;
+}
+
+.load-more .btn-primary {
+  width: auto;
+}
+
+.sets-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 6px;
+}
+
+.sets-table th {
+  text-align: left;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  padding: 6px 10px 6px 0;
+  border-bottom: 2px solid var(--line);
+}
+
+.sets-table td {
+  padding: 7px 10px 7px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 15px;
+}
+
+.exercise-note {
+  background: var(--steel);
+  border-left: 4px solid var(--plate-yellow);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  font-size: 15px;
+  margin: 4px 0 10px;
+}
+
+@media (max-width: 640px) {
+  .history-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .history-stats {
+    gap: 12px;
+    flex-wrap: wrap;
+    white-space: normal;
+  }
+}
+
+/* ==========================================================================
+   Dashboard module: stat cards, chart cards, segmented controls, records
+   Stat cards take the plate colors in weight order: red, blue, yellow, green.
+   ========================================================================== */
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.stat-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border-top: 4px solid var(--plate-red);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stat-card:nth-child(2) {
+  border-top-color: var(--plate-blue);
+}
+
+.stat-card:nth-child(3) {
+  border-top-color: var(--plate-yellow);
+}
+
+.stat-card:nth-child(4) {
+  border-top-color: var(--plate-green);
+}
+
+.stat-value {
+  font-size: 30px;
+}
+
+.stat-label {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.chart-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.chart-card .card-head {
+  align-items: center;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.chart-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.seg {
+  display: inline-flex;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.seg-btn {
+  border: none;
+  background: var(--surface);
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  padding: 5px 13px;
+  cursor: pointer;
+}
+
+.seg-btn.active {
+  background: var(--ink);
+  color: #ffffff;
+}
+
+.record-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  gap: 12px;
+  align-items: center;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 15px;
+}
+
+.record-value {
+  font-size: 17px;
+}
+
+@media (max-width: 900px) {
+  .chart-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
