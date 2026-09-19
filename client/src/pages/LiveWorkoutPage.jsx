@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import api from '../api/client';
+import { useAuth } from '../context/AuthContext';
 
 function messageFrom(err) {
   return (
@@ -21,6 +22,49 @@ function formatClock(total) {
 const RECORD_LABELS = { MAX_WEIGHT: 'Max weight', MAX_REPS: 'Max reps' };
 const DEFAULT_REST_SECONDS = 90;
 
+// In-progress drafts live in localStorage, one key per user so a shared
+// browser never offers one account's session to another. Every helper
+// swallows storage errors (quota, private mode, storage disabled): the draft
+// is a convenience, and the workout must keep working without it.
+const DRAFT_KEY_PREFIX = 'fitness_platform_workout_draft';
+
+function draftKeyFor(userId) {
+  return `${DRAFT_KEY_PREFIX}:${userId}`;
+}
+
+function readDraft(key) {
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return null;
+    const draft = JSON.parse(raw);
+    const valid =
+      draft &&
+      Array.isArray(draft.exercises) &&
+      draft.exercises.length > 0 &&
+      typeof draft.startedAt === 'string' &&
+      Number.isFinite(Date.parse(draft.startedAt));
+    return valid ? draft : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeDraft(key, draft) {
+  try {
+    localStorage.setItem(key, JSON.stringify(draft));
+  } catch {
+    // Best effort - never let a full or unavailable store break the session.
+  }
+}
+
+function clearDraft(key) {
+  try {
+    localStorage.removeItem(key);
+  } catch {
+    // Same as above.
+  }
+}
+
 // The live session. The CLIENT owns all in-progress state (per the batch-save
 // design); pressing Finish sends the entire payload once. started_at is
 // captured the moment this page mounts. Untouched pre-filled rows are simply
@@ -33,6 +77,8 @@ export default function LiveWorkoutPage() {
   const [searchParams] = useSearchParams();
   const routineId = searchParams.get('routine');
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const draftKey = draftKeyFor(user.id);
 
   const startedAtRef = useRef(new Date().toISOString());
   const keyRef = useRef(0);
@@ -40,6 +86,14 @@ export default function LiveWorkoutPage() {
     keyRef.current += 1;
     return keyRef.current;
   };
+
+  // A draft found on mount, held until the user chooses resume or discard.
+  // Read synchronously (lazy initializer) so the prompt is the first thing
+  // rendered and nothing below can touch storage before the decision.
+  const [pendingDraft, setPendingDraft] = useState(() => readDraft(draftKey));
+  // Set when a draft is resumed so the routine fetch, which may still be in
+  // flight, doesn't pre-fill over the restored exercise list.
+  const resumedRef = useRef(false);
 
   const [routineName, setRoutineName] = useState(null);
   const [exercises, setExercises] = useState([]);
@@ -70,6 +124,7 @@ export default function LiveWorkoutPage() {
           if (cancelled) return;
           const routine = res.data.routine;
           setRoutineName(routine.name);
+          if (resumedRef.current) return; // the resumed draft owns the exercise list
           setExercises(
             routine.exercises.map((ex) => ({
               key: nextKey(),
@@ -111,6 +166,19 @@ export default function LiveWorkoutPage() {
     );
     return () => clearTimeout(id);
   }, [rest]);
+
+  // Auto-save: persist the session on every change. Paused while a draft
+  // prompt is unanswered (so the stored draft can't be overwritten before the
+  // user decides) and once the workout has been saved. An empty exercise
+  // list has nothing worth resuming, so it clears the draft instead.
+  useEffect(() => {
+    if (pendingDraft || finished) return;
+    if (exercises.length === 0) {
+      clearDraft(draftKey);
+      return;
+    }
+    writeDraft(draftKey, { exercises, startedAt: startedAtRef.current, routineId });
+  }, [exercises, routineId, pendingDraft, finished, draftKey]);
 
   const nameById = useMemo(
     () => new Map(catalog.map((e) => [e.id, e.name])),
@@ -222,6 +290,7 @@ export default function LiveWorkoutPage() {
       const body = { started_at: startedAtRef.current, exercises: payloadExercises };
       if (routineId) body.routine_id = Number(routineId);
       const { data } = await api.post('/workouts', body);
+      clearDraft(draftKey);
       setRest(null);
       setFinished(data);
     } catch (err) {
@@ -232,8 +301,60 @@ export default function LiveWorkoutPage() {
 
   function discard() {
     if (window.confirm('Discard this workout? Nothing has been saved.')) {
+      clearDraft(draftKey);
       navigate('/workout');
     }
+  }
+
+    function resumeDraft() {
+    const draft = pendingDraft;
+    resumedRef.current = true;
+    startedAtRef.current = draft.startedAt;
+    // Re-key: the counter restarted with the page, and a routine pre-fill
+    // may already have handed out some of the stored keys.
+    setExercises(draft.exercises.map((ex) => ({ ...ex, key: nextKey() })));
+    setElapsed(Math.max(0, Math.floor((Date.now() - Date.parse(draft.startedAt)) / 1000)));
+    setPendingDraft(null);
+    // The draft belongs to the routine it was started from, not to whatever
+    // ?routine= is in the URL now (e.g. after "Start empty workout").
+    const draftRoutineId = draft.routineId || null;
+    if (draftRoutineId !== routineId) {
+      navigate(draftRoutineId ? `/workout/live?routine=${draftRoutineId}` : '/workout/live', {
+        replace: true,
+      });
+    }
+  }
+
+  function discardDraft() {
+    clearDraft(draftKey);
+    setPendingDraft(null);
+  }
+
+    if (pendingDraft) {
+    const count = pendingDraft.exercises.length;
+    const startedAt = new Date(pendingDraft.startedAt).toLocaleString(undefined, {
+      weekday: 'short',
+      hour: 'numeric',
+      minute: '2-digit',
+    });
+    return (
+      <div className="card finish-card">
+        <h1>Resume your workout?</h1>
+        <p className="lead">
+          You have an unfinished session with <span className="mono">{count}</span>{' '}
+          {count === 1 ? 'exercise' : 'exercises'}, started{' '}
+          <span className="mono">{startedAt}</span>.
+        </p>
+        <div className="builder-actions">
+          <button type="button" className="btn btn-primary" onClick={resumeDraft}>
+            Resume
+          </button>
+          <button type="button" className="link-danger" onClick={discardDraft}>
+            Discard
+          </button>
+        </div>
+      </div>
+    );
   }
 
   if (loading) {
